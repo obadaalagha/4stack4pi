@@ -1,0 +1,8 @@
+.env
+
+config/nginx/*
+!/config/nginx/example.conf
+
+gitea/
+logs/
+postgres/
