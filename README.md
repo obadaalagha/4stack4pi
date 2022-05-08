@@ -6,6 +6,8 @@ The purpose of this repository is to build a stack of a local web app, a self-ho
 
 TODO:
 
+- Forward postgres and gitea logs to a host/bind mount directory?
+- Add SMTP server for Gitea?
 - Use alpine images where applicable?
 - Better Docker compose file structuring?
 - Saner defaults all around
