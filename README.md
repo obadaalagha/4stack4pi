@@ -1,6 +1,6 @@
 # 4Stack4PI
 
-_Version 1.0.0._
+_Version 1.0.2_
 
 The purpose of this repository is to build a stack of a local web app, a self-hosted instance of Gitea, and a PostgreSQL instance that can be used for an application backend. This is not meant to be production-ready, rather for deployment to a local Raspberry PI.
 

@@ -1,6 +1,6 @@
 # sudo docker-compose config - ensure env vars load properly
 
-version: '3.1'
+version: '3'
 
 services:
   gitea:
