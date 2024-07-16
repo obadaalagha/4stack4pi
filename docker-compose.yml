@@ -4,7 +4,7 @@ version: '3'
 
 services:
   gitea:
-    image: gitea/gitea
+    image: gitea/gitea:latest
     container_name: gitea
     depends_on:
       - postgres
@@ -28,14 +28,14 @@ services:
       - /etc/localtime:/etc/localtime:ro
 
   postgres:
-    image: postgres
+    image: postgres:alpine
     container_name: postgres
     environment:
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
       - POSTGRES_USER=${POSTGRES_USER}
       - POSTGRES_DB=${POSTGRES_DB_NAME}
     ports:
-      - '5432:5432'
+      - "${POSTGRES_PORT}:5432"
     volumes:
       - ${POSTGRES_DB_PATH}:/var/lib/postgresql/data
 
@@ -43,14 +43,22 @@ services:
     image: adminer
     container_name: adminer
     ports:
-      - '${ADMINER_PORT}:8080'
+      - "${ADMINER_PORT}:8080"
 
   nginx:
-    image: nginx
+    image: nginx:stable-alpine
     container_name: nginx
+    environment:
+      - NGINX_SSL_CERT=${SSL_CERTIFICATE_NAME}
+      - NGINX_SSL_CERT_KEY=${SSL_CERTIFICATE_KEY_NAME}
+      - NGINX_SERVER_NAME=${NGINX_SERVER_NAME}
+      - NGINX_ROOT_DIR=${NGINX_ROOT_DIR}
     ports:
-      - '80:80'
+      - "${NGINX_HTTP_LISTEN_PORT}:80"
+      - "${NGINX_HTTPS_LISTEN_PORT}:443"
     volumes:
-      - ./config/nginx/${NGINX_CONF_FILE}:/etc/nginx/conf.d/${NGINX_CONF_FILE}:ro
+      - ./config/nginx/conf.d:/etc/nginx/conf.d
+      - ./config/nginx/templates:/etc/nginx/templates:ro
       - ./html:/usr/share/nginx/html:ro
       - ./logs/nginx:/var/log/nginx
+      - ./certs:/etc/ssl:ro
