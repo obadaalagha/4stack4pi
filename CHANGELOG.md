@@ -1,6 +1,9 @@
 # Changelog
 
-2.0.1:
+2.1.0:
+- Added helper script to allow for quick replacement of 'example.local' domain to any domain in relevant files (`example.local.template` and `.env.example`)
+
+2.0.2:
 - Added changelog, separate from README, and updated README to have proper changelog
 
 2.0.1:

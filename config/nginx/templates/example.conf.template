@@ -1,0 +1,65 @@
+# ssl-common is a template so it will be generated like this one.
+# proxy-common is a regular configuration with no need for templating.
+
+# HTTP - Redirect to HTTPS
+server {
+	listen 80 default_server;
+	listen [::]:80 default_server;
+	server_name ${NGINX_SERVER_NAME};
+
+	# Redirect HTTP to HTTPS
+	return 301 https://$server_name$request_uri;
+}
+
+# HTTPS
+server {
+	listen 443 ssl;
+	listen [::]:443 ssl;
+	server_name ${NGINX_SERVER_NAME};
+
+	root ${NGINX_ROOT_DIR};
+	index index.html index.htm;
+
+	# Include common SSL configurations
+	include /etc/nginx/conf.d/ssl-common;
+
+	location / {
+		# First attempt to serve the request as a file
+		# then as a directory,
+		# then fall back to displaying a 404 page.
+		try_files $uri $uri/ =404;
+		# Web app can also go here, rather than nginx.
+	}
+}
+
+server {
+  listen 443 ssl;
+	listen [::]:443 ssl;
+  server_name gitea.example.local;
+
+	# SSL Configuration
+	include /etc/nginx/conf.d/ssl-common;
+
+  location / {
+    proxy_pass http://gitea:3000;
+  	
+  	# Proxy Configuration
+  	include /etc/nginx/conf.d/proxy-common;
+  }
+}
+
+server {
+	listen 443 ssl;
+	listen [::]:443 ssl;
+	server_name adminer.example.local;
+
+	# SSL Configuration
+	include /etc/nginx/conf.d/ssl-common;
+
+	location / {
+		proxy_pass http://adminer:8080;
+
+  	# Proxy Configuration
+  	include /etc/nginx/conf.d/proxy-common;
+	}
+}
