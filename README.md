@@ -4,7 +4,7 @@ _Version 2.0.0_
 
 The purpose of this repository is to build a stack of a local web app, a self-hosted instance of Gitea, and a PostgreSQL instance that can be used for an application backend. This is not meant to be fullly production-ready, rather for deployment within a Raspberry Pi.
 
-## TODO:
+## Todo
 
 - [ ] Add SSL certificate configuration
   - [x] Nginx SSL
@@ -12,9 +12,9 @@ The purpose of this repository is to build a stack of a local web app, a self-ho
   - [ ] Gitea SSL
   - [ ] Adminer SSL?
 - [x] Use alpine images where applicable:
-  - [x] Nginx: nginx:stable-alpine
+  - [x] Nginx: `nginx:stable-alpine`
   - [x] Gitea: N/A
-  - [x] Postgres: postgres:alpine
+  - [x] Postgres: `postgres:alpine`
   - [x] Adminer: N/A
 - [x] Use NGINX environment variables and templates.
 - [ ] Add SMTP server for Gitea
@@ -24,13 +24,17 @@ The purpose of this repository is to build a stack of a local web app, a self-ho
 
 ## Changelog
 
+2.0.1:
+- Stylistic changes to README
+
 2.0.0:
 - Added SSL configuration for Nginx, blank certificate files (as examples of directory structure), and changelog in README.
 - Changed Nginx config file from static file to template to allow for environment variable usage. Environment variables added:
-  - NGINX_SERVER_NAME
-  - NGINX_HTTP_LISTEN_PORT
-  - NGINX_HTTPS_LISTEN_PORT
-  - NGINX_ROOT_DIR
+  - `NGINX_SERVER_NAME`
+  - `NGINX_HTTP_LISTEN_PORT`
+  - `NGINX_HTTPS_LISTEN_PORT`
+  - `NGINX_ROOT_DIR`
+  - Deprecated `NGINX_CONF_FILE`
 - Used alpine images where applicable.
 - Cleaned up README.
 
