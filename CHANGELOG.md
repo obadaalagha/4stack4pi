@@ -1,5 +1,8 @@
 # Changelog
 
+2.2.0:
+- Changed `./helper.sh` structure to be more robust and eliminate bugs in which it could remove the backups.
+
 2.1.0:
 - Added helper script to allow for quick replacement of 'example.local' domain to any domain in relevant files (`example.local.template` and `.env.example`)
 

@@ -5,13 +5,14 @@ template_file="$template_folder/example.conf.template"
 
 function modify() {
   # Edit and move template config file
+  local new_path="$template_folder/$1.conf.template"
   sed -i.bak "s/example.local/$1/g" "$template_file"
-  mv "$template_file" "$template_folder/$1.template"
-  echo "Created $template_file"
+  mv "$template_file" "$new_path"
+  echo "Created $new_path"
+  echo "Created backup $template_file.bak"
 
-  # Edit and move environment variable file
-  sed -i.bak "s/example.local/$1/g" ./.env.example
-  mv ./.env.example ./.env
+  # Make new environment variable file
+  sed "s/example.local/$1/g" ./.env.example > .env
   echo "Created .env"
 
   exit 0
@@ -21,26 +22,31 @@ function revert() {
   original_backup="$template_file.bak"
 
   # Find and delete all files except the ssl template and the backup
-  find_result=$(find "$template_folder" -type f -not -name "ssl-common.template" -not -wholename "$original_backup" -delete -print)
+  find_result=$(find "$template_folder" -type f -not -name "ssl-common.template" -not -wholename "$original_backup" -not -wholename "$template_file" -delete -print)
 
-  # If find doesn't find anything to delete
-  if [ -z "$find_result" ]; then
-    echo "Nothing to revert in $template_folder"
-    exit 1
-  else
+  if [ -n "$find_result" ]; then
+    # find did find files to delete, so move back the backup to `example.conf.template`
+    mv "$original_backup" "$template_file"
+    echo "$find_result"
+    echo "Restored $template_file"
     echo "Deleted $find_result"
+  elif [ -f "$original_backup" ]; then
+    # find didn't find files to delete, but the backup exists and needs to be moved
+    mv "$original_backup" "$template_file"
+    echo "Restored $template_file"
+  else
+    # If find doesn't find anything to delete
+    echo "Nothing to revert in $template_folder"
   fi
 
-  # find did find files to delete, so move back the backup to `example.conf.template`
-  mv "$original_backup" "$template_file"
-  echo "Restored $template_file"
-  echo ""
-
   # Remove new .env file and move the .env.example.bak file back to .env.example
-  rm "./.env"
-  mv "./.env.example.bak" "./.env.example"
-  echo "Deleted .env"
-  echo "Restored .env.example"
+  if [ -f "./.env" ]; then
+    rm "./.env"
+    echo "Deleted .env"
+  else
+    echo "No .env to delete"
+    exit 1
+  fi
 
   exit 0
 }
@@ -76,4 +82,5 @@ while getopts "hom:r" opt; do
   esac
 done
 
+# Print help to screen if user runs this without arguments
 display_help 0
