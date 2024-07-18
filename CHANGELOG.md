@@ -1,5 +1,10 @@
 # Changelog
 
+3.0.0:
+- Mapped Nginx root directory to the mounted volume in the docker-compose file. This was only specified in the Nginx template configuration before.
+- Added environment variables for the root directory on the host, and the log directories within the host and container.
+- Added a note in README.md on the Nginx template parsing.
+
 2.2.0:
 - Changed `./helper.sh` structure to be more robust and eliminate bugs in which it could remove the backups.
 
