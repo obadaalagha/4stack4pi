@@ -1,5 +1,11 @@
 # Changelog
 
+3.1.0:
+- Added SSL certificate support to Gitea. This added two variables:
+  - `GITEA_WEBAPP_CERT_FILE`
+  - `GITEA_WEBAPP_KEY_FILE`
+- Added references section
+
 3.0.0:
 - Mapped Nginx root directory to the mounted volume in the docker-compose file. This was only specified in the Nginx template configuration before.
 - Added environment variables for the root directory on the host, and the log directories within the host and container.

@@ -33,19 +33,26 @@ server {
 }
 
 server {
-  listen 443 ssl;
+	listen 443 ssl;
 	listen [::]:443 ssl;
-  server_name gitea.example.local;
+	server_name gitea.example.local;
 
 	# SSL Configuration
 	include /etc/nginx/conf.d/ssl-common;
 
-  location / {
-    proxy_pass http://gitea:3000;
+	location / {
+		client_max_body_size 512M;
+		proxy_pass https://gitea:3000;
+		proxy_ssl_certificate ${NGINX_GITEA_PROXY_CERT};
+		proxy_ssl_certificate_key ${NGINX_GITEA_PROXY_CERT_KEY};
+  	proxy_ssl_session_reuse on;
   	
   	# Proxy Configuration
   	include /etc/nginx/conf.d/proxy-common;
-  }
+  	proxy_set_header X-Real-IP $remote_addr;
+  	proxy_set_header X-Forwarded-For $proxy_add_x_forwaded_for;
+  	proxy_set_header X-Forwarded-Proto $scheme;
+	}
 }
 
 server {
@@ -59,7 +66,7 @@ server {
 	location / {
 		proxy_pass http://adminer:8080;
 
-  	# Proxy Configuration
-  	include /etc/nginx/conf.d/proxy-common;
+  		# Proxy Configuration
+  		include /etc/nginx/conf.d/proxy-common;
 	}
 }

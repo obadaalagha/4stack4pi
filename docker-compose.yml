@@ -1,7 +1,5 @@
 # sudo docker-compose config - ensure env vars load properly
 
-version: '3'
-
 services:
   gitea:
     image: gitea/gitea:latest
@@ -17,13 +15,17 @@ services:
       - GITEA__database__NAME=${POSTGRES_DB_NAME}
       - GITEA__database__USER=${POSTGRES_USER}
       - GITEA__database__PASSWD=${POSTGRES_PASSWORD}
+      - GITEA__server__PROTOCOL=https
       - GITEA__server__DOMAIN=${GITEA_WEBAPP_DOMAIN}
       - GITEA__server__ROOT_URL=${GITEA_WEBAPP_ROOT_URL}
+      - GITEA__server__CERT_FILE=${GITEA_WEBAPP_CERT_FILE}
+      - GITEA__server__KEY_FILE=${GITEA_WEBAPP_KEY_FILE}
     ports:
       - "${GITEA_WEBAPP_PORT}:3000"
       - "${GITEA_SSH_PORT}:22"
     volumes:
       - ${GITEA_DATA_PATH}:/data
+      - ./certs:/etc/ssl:ro
       - /etc/timezone:/etc/timezone:ro
       - /etc/localtime:/etc/localtime:ro
 
@@ -53,6 +55,8 @@ services:
       - NGINX_SSL_CERT_KEY=${SSL_CERTIFICATE_KEY_NAME}
       - NGINX_SERVER_NAME=${NGINX_SERVER_NAME}
       - NGINX_ROOT_DIR=${NGINX_ROOT_DIR_CONTAINER}
+      - NGINX_GITEA_PROXY_CERT=${GITEA_WEBAPP_CERT_FILE}
+      - NGINX_GITEA_PROXY_CERT_KEY=${GITEA_WEBAPP_KEY_FILE}
     ports:
       - "${NGINX_HTTP_LISTEN_PORT}:80"
       - "${NGINX_HTTPS_LISTEN_PORT}:443"
